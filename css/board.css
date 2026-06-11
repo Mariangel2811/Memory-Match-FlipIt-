@@ -1,0 +1,136 @@
+
+/* TABLERO */
+
+.board{
+    width:90%;
+    max-width:1000px;
+    margin:30px auto;
+    display:grid;
+    gap:15px;
+    justify-content:center;
+    padding:20px;
+}
+
+/* DIFICULTADES */
+
+.board.easy{
+    grid-template-columns:repeat(4,100px);
+}
+
+.board.medium{
+    grid-template-columns:repeat(6,90px);
+}
+
+.board.hard{
+    grid-template-columns:repeat(8,80px);
+}
+
+/* CARTAS */
+
+.card{
+    width:100%;
+    aspect-ratio:1;
+    position:relative;
+    cursor:pointer;
+    transform-style:preserve-3d;
+    transition:transform .6s;
+}
+
+/* VOLTEAR */
+
+.card.flip{
+    transform:rotateY(180deg);
+}
+
+/* CARAS */
+
+.front,
+.back{
+    position:absolute;
+    width:100%;
+    height:100%;
+    border-radius:12px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    backface-visibility:hidden;
+    box-shadow:0 5px 12px rgba(0,0,0,.15);
+}
+
+/* Parte trasera */
+
+.back{
+    background:#2563eb;
+    color:white;
+    font-size:2rem;
+}
+
+/* Parte frontal */
+
+.front{
+    background:white;
+    transform:rotateY(180deg);
+    font-size:2.5rem;
+}
+
+/* CARTA ENCONTRADA */
+
+.card.matched .front{
+    background:#22c55e;
+    color:white;
+}
+
+/* CARTA BLOQUEADA */
+
+.card.lock{
+    pointer-events:none;
+}
+
+/* HOVER */
+
+.card:hover{
+    transform:scale(1.05);
+}
+
+.card.flip:hover{
+    transform:rotateY(180deg) scale(1.05);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:992px){
+
+    .board.easy{
+        grid-template-columns:repeat(4,80px);
+    }
+
+    .board.medium{
+        grid-template-columns:repeat(6,70px);
+    }
+
+    .board.hard{
+        grid-template-columns:repeat(8,60px);
+    }
+}
+
+@media(max-width:768px){
+    .board.easy{
+        grid-template-columns:repeat(4,65px);
+    }
+
+    .board.medium{
+        grid-template-columns:repeat(6,55px);
+    }
+
+    .board.hard{
+        grid-template-columns:repeat(8,45px);
+    }
+}
+
+@media(max-width:480px){
+
+    .board{
+        gap:8px;
+    }
+
+}
