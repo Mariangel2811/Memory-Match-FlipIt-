@@ -3,9 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>FlipIt!</title>
 </head>
 <body>
     
+       <section id="menu" class="menu-container">
+
+          <h1>FlipIt!</h1>
+        <p>Encuentra cada pareja, supera cada desafío.</p>
+
+        <div class="config">
+
+            <label>Modo de Juego</label>
+
+                <select id="gameMode">
+                <option value="solo">Solitario</option>
+                <option value="pvp">PvP Local</option>
+                <option value="free">Modo Libre</option>
+            </select>
+
+            <div id="playerOne">
+                <label>Jugador</label>
+                <input
+                    type="text"
+                    id="player1"
+                    placeholder="Nombre del jugador"
+                >
+            </div>
+
+              <div id="playerTwo" style="display:none;">
+                <label>Jugador 2</label>
+                <input
+                    type="text"
+                    id="player2"
+                    placeholder="Nombre del jugador 2"
+                >
+            </div>
+
+                <label>Dificultad</label>
+
+            <select id="difficulty">
+                <option value="4">Fácil (4x4)</option>
+                <option value="6">Intermedio (6x6)</option>
+                <option value="8">Difícil (8x8)</option>
+            </select>
+
+               <label>Temática</label>
+
+            <select id="theme">
+                <option value="animals">Animales</option>
+                <option value="space">Espacio</option>
+                <option value="fantasy">Fantasía</option>
+            </select>
+
+            <button id="startGame">
+                Iniciar Juego
+            </button>
+
+        </div>
+
+    </section>
+
+      <header id="hud" class="hud hidden">
+
+        <div class="player-info">
+
+            <span id="playerName">
+                Jugador
+            </span>
+
+            <span id="turnIndicator"></span>
+
+        </div>
+
+        <div class="game-info">
+
+            <span>
+                ⏱ Tiempo:
+                <strong id="timer">00:00</strong>
+            </span>
+
+            <span>
+                🎯 Movimientos:
+                <strong id="moves">0</strong>
+            </span>
+
+            <span>
+                🏆 Pares:
+                <strong id="pairs">0</strong>
+            </span>
+
+             </div>
+
+        <button id="restartGame">
+            Reiniciar
+        </button>
+
+    </header>
+
+
+
 </body>
 </html>
