@@ -5,183 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memory Odyssey</title>
 
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/menu.css">
     <link rel="stylesheet" href="css/board.css">
     <link rel="stylesheet" href="css/animations.css">
-    
-
 </head>
-     
-</head>
-<body>
-    
-       <section id="menu" class="menu-container">
-
-          <h1>Memory Odyssey</h1>
-        <p>Encuentra cada pareja, supera cada desafío.</p>
+<body id="body">
+    <!-- Menú principal -->
+    <div id="menu" class="menu-container">
+        <h1>Memory Odyssey</h1>
 
         <div class="config">
-
             <label>Modo de Juego</label>
-
-                <select id="gameMode">
+            <select id="gameMode">
                 <option value="solo">Solitario</option>
                 <option value="pvp">PvP Local</option>
                 <option value="free">Modo Libre</option>
             </select>
 
             <div id="playerOne">
-                <label>Jugador</label>
-                <input
-                    type="text"
-                    id="player1"
-                    placeholder="Nombre del jugador"
-                >
+                <label>Jugador 1</label>
+                <input type="text" id="player1" placeholder="Nombre del jugador 1">
             </div>
 
-              <div id="playerTwo" style="display:none;">
+            <div id="playerTwo" style="display:none;">
                 <label>Jugador 2</label>
-                <input
-                    type="text"
-                    id="player2"
-                    placeholder="Nombre del jugador 2"
-                >
+                <input type="text" id="player2" placeholder="Nombre del jugador 2">
             </div>
 
-                <label>Dificultad</label>
-
+            <label>Dificultad</label>
             <select id="difficulty">
                 <option value="4">Fácil (4x4)</option>
                 <option value="6">Intermedio (6x6)</option>
                 <option value="8">Difícil (8x8)</option>
             </select>
 
-               <label>Temática</label>
-
+            <label>Temática</label>
             <select id="theme">
                 <option value="animals">Animales</option>
-                <option value="space">Espacio</option>
-                <option value="fantasy">Fantasía</option>
+                <option value="food">Comida</option>
+                <option value="transport">Transporte</option>
             </select>
 
-            <button id="startGame">
-                Iniciar Juego
-            </button>
-
+            <button id="startGame">Iniciar Juego</button>
         </div>
+    </div>
 
-    </section>
-
-      <header id="hud" class="hud hidden">
-
-        <div class="player-info">
-
-            <span id="playerName">
-                Jugador
-            </span>
-
-            <span id="turnIndicator"></span>
-
+    <!-- HUD -->
+    <div id="hud" class="hud hidden">
+        <div class="players-container">
+            <div id="player1Info" class="player-info">
+                <span class="player-name">Jugador 1</span>
+                <span class="player-score">Pares: 0</span>
+            </div>
+            <div id="player2Info" class="player-info">
+                <span class="player-name">Jugador 2</span>
+                <span class="player-score">Pares: 0</span>
+            </div>
         </div>
-
+        <div class="turn-indicator" id="turnIndicator">
+            Turno: <span id="currentTurn">Jugador 1</span>
+        </div>
         <div class="game-info">
-
-            <span>
-                ⏱ Tiempo:
-                <strong id="timer">00:00</strong>
-            </span>
-
-            <span>
-                🎯 Movimientos:
-                <strong id="moves">0</strong>
-            </span>
-
-            <span>
-                🏆 Pares:
-                <strong id="pairs">0</strong>
-            </span>
-
-             </div>
-
-        <button id="restartGame">
-            Reiniciar
-        </button>
-
-    </header>
-
-    <!-- Logros -->
-
-    <aside id="achievementPanel" class="hidden">
-
-        <h3>Logros</h3>
-
-        <ul id="achievementList">
-
-        </ul>
-
-    </aside>
+            <span>⏱ Tiempo: <strong id="timer">00:00</strong></span>
+            <span>🎯 Movimientos: <strong id="moves">0</strong></span>
+            <span>🏆 Pares totales: <strong id="totalPairs">0</strong></span>
+        </div>
+        <button id="restartGame">Reiniciar</button>
+        <button id="backToMenu">Volver al Menú</button>
+    </div>
 
     <!-- Tablero -->
-
-    <main>
-
-        <section
-            id="gameBoard"
-            class="board">
-        </section>
-
-    </main>
-
-    <!-- Notificaciones -->
-
-    <div id="notifications"></div>
+    <div id="gameBoard" class="board"></div>
 
     <!-- Pantalla Final -->
-
-    <section
-        id="endScreen"
-        class="hidden">
-
+    <div id="endScreen" class="hidden">
         <div class="modal">
-
             <h2>Fin de la Partida</h2>
-
-            <div id="results">
-
-            </div>
-
+            <div id="results"></div>
             <div class="buttons">
-
-                <button id="playAgain">
-                    Jugar de Nuevo
-                </button>
-
-                <button id="backMenu">
-                    Volver al Menú
-                </button>
-
+                <button id="playAgain">Jugar de Nuevo</button>
+                <button id="backMenu">Volver al Menú</button>
             </div>
-
         </div>
+    </div>
 
-    </section>
-
-    <!-- JavaScript -->
-
-     <script src="js/state.js"></script>
-    <script src="js/utils.js"></script>
     <script src="js/themes.js"></script>
-    <script src="js/modes.js"></script>
-    <script src="js/timer.js"></script>
-    <script src="js/hud.js"></script>
-    <script src="js/achievements.js"></script>
-    <script src="js/app.js"></script>
     <script src="js/game.js"></script>
-    <script src="js/menu.js"></script>
-    <script src="js/board.js"></script>
-    <script src="js/modal.js"></script>
-
-
 </body>
 </html>

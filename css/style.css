@@ -1,97 +1,198 @@
-
 /* VARIABLES */
-
-:root{
-    --primary:#2563eb;
-    --secondary:#1e40af;
-    --background:#f4f7fb;
-    --white:#ffffff;
-    --dark:#1f2937;
-    --success:#22c55e;
-    --danger:#ef4444;
-    --shadow:0 5px 15px rgba(0,0,0,.15);
-    --font:'Segoe UI',sans-serif;
+:root {
+    --primary: #2563eb;
+    --secondary: #1e40af;
+    --background: #f4f7fb;
+    --white: #ffffff;
+    --dark: #1f2937;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --shadow: 0 5px 15px rgba(0,0,0,.15);
+    --font: 'Segoe UI', sans-serif;
 }
 
 /* RESET */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-    font-family:var(--font);
-    background:var(--background);
-    color:var(--dark);
-    min-height:100vh;
+body {
+    font-family: var(--font);
+    color: var(--dark);
+    min-height: 100vh;
+    transition: all 0.5s ease;
+    position: relative;
 }
 
-/* TITULOS */
-
-h1{
-    font-size:3rem;
-    color:var(--primary);
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: -1;
 }
 
-h2{
-    color:var(--primary);
+/* Temas de fondo para TODO el body (menú y juego) */
+body.theme-animals {
+    background-image: url(https://i.pinimg.com/1200x/f7/b0/98/f7b098711e66649dfd9513b01aef1844.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
 }
 
-h3{
-    margin-bottom:10px;
+body.theme-food {
+    background-image: url(https://i.pinimg.com/1200x/0a/8b/63/0a8b630f449a30b2820557419106ce69.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
 }
 
-p{
-    margin:10px 0;
+body.theme-transport {
+    background-image: url(https://i.pinimg.com/1200x/6b/ac/40/6bac40ca9548225b28055bdbc940a830.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
 }
 
-/* BOTONES */
-
-button{
-    cursor:pointer;
-    border:none;
-    padding:12px 22px;
-    border-radius:8px;
-    background:var(--primary);
-    color:white;
-    font-size:16px;
-    transition:.3s;
+/* HUD */
+.hud {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px 30px;
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-button:hover{
-    background:var(--secondary);
-    transform:scale(1.05);
+.players-container {
+    display: flex;
+    gap: 30px;
 }
 
-/* INPUTS */
-
-input,
-select{
-    width:100%;
-    padding:12px;
-    margin-top:5px;
-    margin-bottom:15px;
-    border:1px solid #ccc;
-    border-radius:8px;
-    font-size:16px;
+.player-info {
+    padding: 10px 20px;
+    border-radius: 10px;
+    background: rgba(240, 240, 240, 0.9);
+    transition: all 0.3s ease;
 }
 
-/* CLASES GENERALES */
-
-.hidden{
-    display:none;
+.player-info.active {
+    background: var(--primary);
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);
 }
 
-.center{
-    display:flex;
-    justify-content:center;
-    align-items:center;
+.player-info.active .player-name,
+.player-info.active .player-score {
+    color: white;
 }
 
-.container{
-    width:90%;
-    max-width:1200px;
-    margin:auto;
+.player-name {
+    display: block;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.player-score {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.turn-indicator {
+    background: var(--primary);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.game-info {
+    display: flex;
+    gap: 25px;
+}
+
+.game-info span {
+    font-size: 1rem;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: var(--primary);
+    color: white;
+    font-size: 14px;
+    transition: .3s;
+}
+
+button:hover {
+    background: var(--secondary);
+    transform: scale(1.05);
+}
+
+/* Pantalla final */
+#endScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#endScreen.hidden {
+    display: none !important;
+}
+
+#endScreen .modal {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    min-width: 350px;
+    max-width: 500px;
+}
+
+#endScreen .modal .buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+#results {
+    margin: 20px 0;
+}
+
+#results p {
+    margin: 10px 0;
+    font-size: 1.1rem;
+}
+
+.winner-text {
+    color: var(--success);
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+/* Clases generales */
+.hidden {
+    display: none !important;
 }

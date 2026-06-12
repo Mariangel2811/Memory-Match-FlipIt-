@@ -1,13 +1,9 @@
 const gameState = {
-
     mode: "solo",
     difficulty: 4,
     theme: "animals",
-    players: [],
+    players: [{ name: "Jugador", score: 0 }],
     board: [],
-    firstCard: null,
-    secondCard: null,
-    lockBoard: false,
     moves: 0,
     pairs: 0,
     totalPairs: 0,
@@ -16,5 +12,4 @@ const gameState = {
     currentPlayer: 0,
     achievements: [],
     consecutiveMatches: 0
-
 };

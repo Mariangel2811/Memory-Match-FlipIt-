@@ -1,43 +1,33 @@
 function showEndScreen() {
-
-    const modal =
-        document.getElementById("endScreen");
-
+    const modal = document.getElementById("endScreen");
     modal.classList.remove("hidden");
 
-    const results =
-        document.getElementById("results");
-
+    const results = document.getElementById("results");
     let html = "";
 
-    html += `<p>Movimientos: ${gameState.moves}</p>`;
-
-    html += `<p>Pares: ${gameState.pairs}</p>`;
-
+    html += `<p><strong>📊 Resultados</strong></p>`;
+    html += `<p>🎯 Movimientos: ${gameState.moves}</p>`;
+    html += `<p>🏆 Pares encontrados: ${gameState.pairs}/${gameState.totalPairs}</p>`;
+    
     if (gameState.mode !== "free") {
-
-        html += `<p>Tiempo: ${formatTime(gameState.timer)}</p>`;
-
+        html += `<p>⏱ Tiempo: ${formatTime(gameState.timer)}</p>`;
     }
 
     if (gameState.mode === "pvp") {
-
-        html += `<p>${checkWinner()}</p>`;
-
+        html += `<p><strong>🏅 ${checkWinner()}</strong></p>`;
+        html += `<p>${gameState.players[0].name}: ${gameState.players[0].score} pts</p>`;
+        html += `<p>${gameState.players[1].name}: ${gameState.players[1].score} pts</p>`;
     }
 
-    html += "<h3>Logros</h3>";
-
-    html += "<ul>";
-
-    gameState.achievements.forEach(a => {
-
-        html += `<li>${a}</li>`;
-
-    });
-
-    html += "</ul>";
+    if (gameState.achievements.length > 0) {
+        html += "<h3>🏆 Logros Desbloqueados</h3><ul>";
+        gameState.achievements.forEach(a => {
+            html += `<li>${a}</li>`;
+        });
+        html += "</ul>";
+    } else {
+        html += "<p>✨ Sin logros desbloqueados</p>";
+    }
 
     results.innerHTML = html;
-
 }

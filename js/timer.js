@@ -1,28 +1,29 @@
 function startTimer() {
-
-    if (gameState.mode === "free")
-        return;
-    
-    if (gameState.timerInterval)
-        return;
+    if (gameState.mode === "free") return;
+    if (gameState.timerInterval) return;
+    if (!gameStarted) return;
 
     gameState.timerInterval = setInterval(() => {
         gameState.timer++;
-        document.getElementById("timer").textContent =
-            formatTime(gameState.timer);
+        const timerElement = document.getElementById("timer");
+        if (timerElement) {
+            timerElement.textContent = formatTime(gameState.timer);
+        }
     }, 1000);
-
 }
 
 function stopTimer() {
-    clearInterval(gameState.timerInterval);
-    gameState.timerInterval = null;
-
+    if (gameState.timerInterval) {
+        clearInterval(gameState.timerInterval);
+        gameState.timerInterval = null;
+    }
 }
 
 function resetTimer() {
     stopTimer();
     gameState.timer = 0;
-    document.getElementById("timer").textContent = "00:00";
-
+    const timerElement = document.getElementById("timer");
+    if (timerElement) {
+        timerElement.textContent = "00:00";
+    }
 }
