@@ -94,31 +94,43 @@ function updateHUD() {
     
     const player1Div = document.getElementById("player1Info");
     const player2Div = document.getElementById("player2Info");
+    const turnIndicator = document.getElementById("turnIndicator");
     
+    if (player1Div) player1Div.style.display = "flex";
+
     if (gameState.mode === "pvp") {
+        if (player2Div) player2Div.style.display = "flex";
+
         if (gameState.currentPlayer === 0) {
-            player1Div.classList.add("active");
-            player2Div.classList.remove("active");
+            if (player1Div) player1Div.classList.add("active");
+            if (player2Div) player2Div.classList.remove("active");
             if (currentTurnSpan) currentTurnSpan.textContent = gameState.players[0].name;
         } else {
-            player1Div.classList.remove("active");
-            player2Div.classList.add("active");
+            if (player1Div) player1Div.classList.remove("active");
+            if (player2Div) player2Div.classList.add("active");
             if (currentTurnSpan) currentTurnSpan.textContent = gameState.players[1].name;
         }
+
+        if (turnIndicator) turnIndicator.style.display = "block";
     } else {
-        player1Div.classList.remove("active");
-        player2Div.classList.remove("active");
+        if (player1Div) player1Div.classList.remove("active");
+        if (player2Div) player2Div.classList.remove("active");
+        if (player2Div) player2Div.style.display = "none";
         if (currentTurnSpan) currentTurnSpan.textContent = "";
+        if (turnIndicator) turnIndicator.style.display = "none";
     }
 }
 
 // ================================
-// CAMBIAR FONDO
+// CAMBIAR FONDO (CORREGIDO)
 // ================================
 function changeBackground(theme) {
-    const body = document.getElementById("body");
-    body.classList.remove("theme-animals", "theme-food", "theme-transport");
-    body.classList.add(`theme-${theme}`);
+    // Apuntamos de forma segura al elemento body nativo de la página
+    const body = document.body; 
+    if (body) {
+        body.classList.remove("theme-animals", "theme-food", "theme-transport");
+        body.classList.add(`theme-${theme}`);
+    }
 }
 
 function setupThemeSelector() {
@@ -161,12 +173,7 @@ function createBoard() {
     const totalCards = difficulty * difficulty;
     gameState.totalPairs = totalCards / 2;
 
-    console.log(`Creando tablero ${difficulty}x${difficulty}, Total cartas: ${totalCards}, Pares: ${gameState.totalPairs}`);
-
-    // Obtener los íconos del tema seleccionado
     let themeIcons = [...themes[gameState.theme]];
-    
-    // Seleccionar solo los necesarios
     let cards = themeIcons.slice(0, gameState.totalPairs);
     cards = [...cards, ...cards];
     cards = shuffle(cards);
@@ -187,8 +194,6 @@ function createBoard() {
         card.addEventListener("click", flipCard);
         board.appendChild(card);
     });
-    
-    console.log(`Tablero creado con ${cards.length} cartas`);
 }
 
 // ================================
@@ -236,43 +241,55 @@ function checkMatch() {
 }
 
 // ================================
-// MANEJAR COINCIDENCIA
+// MANEJAR COINCIDENCIA (CORREGIDO)
 // ================================
 function handleMatch() {
-    firstCard.classList.add("matched");
-    secondCard.classList.add("matched");
+    // Guardamos copias locales para evitar conflictos asincrónicos
+    const card1 = firstCard;
+    const card2 = secondCard;
 
-    firstCard.removeEventListener("click", flipCard);
-    secondCard.removeEventListener("click", flipCard);
+    card1.classList.add("flip", "matched");
+    card2.classList.add("flip", "matched");
+
+    card1.removeEventListener("click", flipCard);
+    card2.removeEventListener("click", flipCard);
 
     gameState.pairs++;
     gameState.players[gameState.currentPlayer].score++;
     
-    updateHUD();
+    // Limpiamos la selección global inmediatamente para poder seguir jugando
     resetSelection();
+    
+    updateHUD();
     checkVictory();
 }
 
 // ================================
-// MANEJAR NO COINCIDENCIA
+// MANEJAR NO COINCIDENCIA (CORREGIDO)
 // ================================
 function handleMismatch() {
-    firstCard.classList.add("error");
-    secondCard.classList.add("error");
+    // Almacenamos copias locales fijas de las dos cartas erróneas
+    const card1 = firstCard;
+    const card2 = secondCard;
+
+    card1.classList.add("error");
+    card2.classList.add("error");
 
     setTimeout(() => {
-        firstCard.classList.remove("flip");
-        secondCard.classList.remove("flip");
-        firstCard.classList.remove("error");
-        secondCard.classList.remove("error");
+        // Actuamos sobre las variables locales de manera segura sin tocar la selección nueva del usuario
+        card1.classList.remove("flip");
+        card2.classList.remove("flip");
+        card1.classList.remove("error");
+        card2.classList.remove("error");
         
         if (gameState.mode === "pvp") {
             gameState.currentPlayer = gameState.currentPlayer === 0 ? 1 : 0;
             updateHUD();
         }
-        
-        resetSelection();
     }, 800);
+
+    // Vaciamos el puntero global inmediatamente para no arrastrar referencias al siguiente par
+    resetSelection();
 }
 
 // ================================
@@ -353,16 +370,12 @@ function readConfiguration() {
             { name: "Jugador 2", score: 0 }
         ];
     }
-    
-    console.log("Configuración:", gameState);
 }
 
 // ================================
 // INICIAR JUEGO
 // ================================
 function startGame() {
-    console.log("Iniciando juego...");
-    
     readConfiguration();
 
     document.getElementById("menu").classList.add("hidden");
@@ -434,13 +447,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setupThemeSelector();
 
-    if (startButton) {
-        startButton.addEventListener("click", startGame);
-    }
-    
-    if (restartButton) {
-        restartButton.addEventListener("click", resetGame);
-    }
+    if (startButton) startButton.addEventListener("click", startGame);
+    if (restartButton) restartButton.addEventListener("click", resetGame);
     
     if (playAgain) {
         playAgain.addEventListener("click", () => {
@@ -449,13 +457,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     
-    if (backMenu) {
-        backMenu.addEventListener("click", backToMenu);
-    }
-    
-    if (backToMenuBtn) {
-        backToMenuBtn.addEventListener("click", backToMenu);
-    }
+    if (backMenu) backMenu.addEventListener("click", backToMenu);
+    if (backToMenuBtn) backToMenuBtn.addEventListener("click", backToMenu);
     
     if (modeSelect) {
         modeSelect.addEventListener("change", () => {

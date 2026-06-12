@@ -4,23 +4,10 @@
     transition: all .3s ease;
 }
 
-/* GIRO DE CARTA */
-
-.card{
-    transition: transform .6s;
-    transform-style: preserve-3d;
-}
-
-.card.flip{
-    transform: rotateY(180deg);
-}
-
 /* PAREJA ENCONTRADA */
 
 .card.matched{
-
     animation: pulse .6s ease;
-
 }
 
 /* ERROR */

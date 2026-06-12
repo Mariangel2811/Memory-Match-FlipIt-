@@ -1,4 +1,6 @@
-/* TABLERO */
+/* ==========================================================================
+   TABLERO Y ESTRUCTURA GENERAL
+   ========================================================================== */
 .board {
     width: 90%;
     max-width: 1200px;
@@ -7,6 +9,7 @@
     gap: 15px;
     justify-content: center;
     padding: 20px;
+    perspective: 1000px; /* Permite el efecto de profundidad 3D */
 }
 
 /* DIFICULTADES */
@@ -22,116 +25,121 @@
     grid-template-columns: repeat(8, minmax(60px, 85px));
 }
 
-/* CARTAS */
+/* ==========================================================================
+   CARTAS (ESTRUCTURA 3D)
+   ========================================================================== */
 .card {
     width: 100%;
     aspect-ratio: 1;
     position: relative;
     cursor: pointer;
     transform-style: preserve-3d;
-    transition: transform 0.6s;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* VOLTEAR */
+/* EFECTO VOLTEAR */
 .card.flip {
     transform: rotateY(180deg);
 }
 
-/* CARAS */
+/* CARAS DE LA CARTA */
 .front,
 .back {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     border-radius: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden; /* Soporte estricto para Safari/iOS */
     box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+    font-size: 2rem;
 }
 
-/* Parte trasera */
+/* Parte trasera (Azul - Lo que se ve al inicio) */
 .back {
     background: linear-gradient(135deg, #2563eb, #1d4ed8);
     color: white;
-    font-size: 2rem;
     font-weight: bold;
+    transform: rotateY(0deg);
+    z-index: 2;
 }
 
-/* Parte frontal */
+/* Parte frontal (Blanca - La que esconde el emoji) */
 .front {
     background: white;
-    transform: rotateY(180deg);
-    font-size: 2rem;
+    color: #111;
+    transform: rotateY(180deg); /* Pre-volteada en el espacio 3D */
+    z-index: 1;
 }
 
-/* CARTA ENCONTRADA */
+/* ==========================================================================
+   ESTADOS DEL JUEGO (Acierto, Error, Animaciones)
+   ========================================================================== */
+
+/* CARTA ENCONTRADA (MATCH) */
+.card.matched {
+    transform: rotateY(180deg) !important; /* Mantiene la carta volteada */
+    cursor: default;
+    filter: drop-shadow(0 0 12px #22c55e);
+    pointer-events: none; /* Bloquea los clicks */
+}
+
+/* Forzamos a la cara del emoji a quedarse al frente de forma plana */
 .card.matched .front {
-    background: linear-gradient(135deg, #22c55e, #16a34a);
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    color: white !important;
+    backface-visibility: visible !important;
+    -webkit-backface-visibility: visible !important;
+    z-index: 10 !important;
+}
+
+/* Eliminamos la cara azul del renderizado para que no cause solapamientos visuales */
+.card.matched .back {
+    display: none !important;
+    visibility: hidden !important;
+    z-index: -10 !important;
+}
+
+/* CARTA ERRÓNEA (SHAKE) */
+.card.error {
+    animation: shake 0.5s ease-in-out;
+}
+
+.card.error .front {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
     color: white;
 }
 
-.card.matched {
-    cursor: default;
-    filter: drop-shadow(0 0 5px #22c55e);
+/* Animación de vibración para el error */
+@keyframes shake {
+    0%, 100% { transform: rotateY(180deg) translateX(0); }
+    20%, 60% { transform: rotateY(180deg) translateX(-6px); }
+    40%, 80% { transform: rotateY(180deg) translateX(6px); }
 }
 
-/* ERROR */
-.card.error {
-    animation: shake 0.5s;
-}
-
-.card.error .front,
-.card.error .back {
-    background: #ef4444;
-}
-
-/* RESPONSIVE */
+/* ==========================================================================
+   RESPONSIVE (MEDIA QUERIES)
+   ========================================================================== */
 @media (max-width: 992px) {
-    .board.easy {
-        grid-template-columns: repeat(4, minmax(70px, 90px));
-    }
-    .board.medium {
-        grid-template-columns: repeat(6, minmax(60px, 80px));
-    }
-    .board.hard {
-        grid-template-columns: repeat(8, minmax(50px, 65px));
-    }
-    .front, .back {
-        font-size: 1.5rem;
-    }
+    .board.easy { grid-template-columns: repeat(4, minmax(70px, 90px)); }
+    .board.medium { grid-template-columns: repeat(6, minmax(60px, 80px)); }
+    .board.hard { grid-template-columns: repeat(8, minmax(50px, 65px)); }
+    .front, .back { font-size: 1.5rem; }
 }
 
 @media (max-width: 768px) {
-    .board.easy {
-        grid-template-columns: repeat(4, minmax(60px, 75px));
-    }
-    .board.medium {
-        grid-template-columns: repeat(6, minmax(50px, 65px));
-    }
-    .board.hard {
-        grid-template-columns: repeat(8, minmax(40px, 55px));
-    }
-    .front, .back {
-        font-size: 1.2rem;
-    }
-    .board {
-        gap: 8px;
-    }
+    .board { gap: 8px; padding: 10px; }
+    .board.easy { grid-template-columns: repeat(4, minmax(60px, 75px)); }
+    .board.medium { grid-template-columns: repeat(6, minmax(50px, 65px)); }
+    .board.hard { grid-template-columns: repeat(8, minmax(40px, 55px)); }
+    .front, .back { font-size: 1.2rem; border-radius: 8px; }
 }
 
 @media (max-width: 480px) {
-    .board.easy {
-        grid-template-columns: repeat(4, minmax(55px, 65px));
-    }
-    .board.medium {
-        grid-template-columns: repeat(6, minmax(45px, 55px));
-    }
-    .board.hard {
-        grid-template-columns: repeat(8, minmax(35px, 45px));
-    }
-    .front, .back {
-        font-size: 1rem;
-    }
+    .board.easy { grid-template-columns: repeat(4, minmax(55px, 65px)); }
+    .board.medium { grid-template-columns: repeat(6, minmax(42px, 52px)); }
+    .board.hard { grid-template-columns: repeat(8, minmax(32px, 42px)); }
+    .front, .back { font-size: 1rem; }
 }
