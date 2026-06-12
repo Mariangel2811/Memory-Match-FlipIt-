@@ -14,7 +14,9 @@ let gameState = {
     pairs: 0,
     totalPairs: 0,
     timer: 0,
-    timerInterval: null
+    timerInterval: null,
+    achievements: [],
+    consecutiveMatches: 0
 };
 
 let gameStarted = false;
@@ -256,11 +258,17 @@ function handleMatch() {
 
     gameState.pairs++;
     gameState.players[gameState.currentPlayer].score++;
+    gameState.consecutiveMatches++;
     
     // Limpiamos la selección global inmediatamente para poder seguir jugando
     resetSelection();
     
     updateHUD();
+    
+    if (typeof checkAchievements === 'function') {
+        checkAchievements();
+    }
+    
     checkVictory();
 }
 
@@ -274,6 +282,8 @@ function handleMismatch() {
 
     card1.classList.add("error");
     card2.classList.add("error");
+
+    gameState.consecutiveMatches = 0;
 
     setTimeout(() => {
         // Actuamos sobre las variables locales de manera segura sin tocar la selección nueva del usuario
@@ -380,6 +390,15 @@ function startGame() {
 
     document.getElementById("menu").classList.add("hidden");
     document.getElementById("hud").classList.remove("hidden");
+    
+    const achievementPanel = document.getElementById("achievementPanel");
+    if (achievementPanel) {
+        achievementPanel.classList.remove("hidden");
+    }
+    const achievementList = document.getElementById("achievementList");
+    if (achievementList) {
+        achievementList.innerHTML = "";
+    }
 
     gameState.moves = 0;
     gameState.pairs = 0;
@@ -387,6 +406,12 @@ function startGame() {
     gameState.currentPlayer = 0;
     gameState.players[0].score = 0;
     gameState.players[1].score = 0;
+    gameState.achievements = [];
+    gameState.consecutiveMatches = 0;
+
+    if (typeof resetAchievements === 'function') {
+        resetAchievements();
+    }
 
     document.getElementById("moves").textContent = "0";
     
@@ -410,12 +435,23 @@ function resetGame() {
     secondCard = null;
     lockBoard = false;
     
+    const achievementList = document.getElementById("achievementList");
+    if (achievementList) {
+        achievementList.innerHTML = "";
+    }
+    
     gameState.moves = 0;
     gameState.pairs = 0;
     gameState.timer = 0;
     gameState.currentPlayer = 0;
     gameState.players[0].score = 0;
     gameState.players[1].score = 0;
+    gameState.achievements = [];
+    gameState.consecutiveMatches = 0;
+
+    if (typeof resetAchievements === 'function') {
+        resetAchievements();
+    }
 
     document.getElementById("moves").textContent = "0";
     document.getElementById("endScreen").classList.add("hidden");

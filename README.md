@@ -38,7 +38,6 @@ Memory Odyssey es un juego de memoria web donde el jugador debe encontrar pares 
 
 ## Capturas de pantalla
 
-Agrega las imágenes del juego en `screenshots/` y actualiza las rutas si quieres.
 
 ![Pantalla del menú](screenshots/menu.png)
 

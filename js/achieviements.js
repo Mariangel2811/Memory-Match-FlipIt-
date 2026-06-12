@@ -5,17 +5,59 @@ const achievements = {
     speed: false
 };
 
+function resetAchievements() {
+    achievements.firstPair = false;
+    achievements.streak = false;
+    achievements.firstTry = false;
+    achievements.speed = false;
+}
+
+function showNotification(message) {
+    let container = document.getElementById("toastContainer");
+    if (!container) {
+        container = document.createElement("div");
+        container.id = "toastContainer";
+        container.className = "toast-container";
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement("div");
+    toast.className = "toast-notification";
+    toast.innerHTML = `
+        <div class="toast-icon">🏆</div>
+        <div class="toast-content">
+            <div class="toast-title">¡Logro Desbloqueado!</div>
+            <div class="toast-message">${message}</div>
+        </div>
+    `;
+
+    container.appendChild(toast);
+
+    // Auto-remove after 4 seconds (slide out + fade)
+    setTimeout(() => {
+        toast.classList.add("toast-hide");
+        toast.addEventListener("animationend", () => {
+            toast.remove();
+        });
+    }, 4000);
+}
+
 function unlock(name) {
+    if (!gameState.achievements) {
+        gameState.achievements = [];
+    }
     if (gameState.achievements.includes(name)) return;
     
     gameState.achievements.push(name);
-    const li = document.createElement("li");
-    li.textContent = "🏆 " + name;
-    document.getElementById("achievementList").appendChild(li);
     
-    if (typeof showNotification === 'function') {
-        showNotification(`¡Logro desbloqueado: ${name}!`);
+    const list = document.getElementById("achievementList");
+    if (list) {
+        const li = document.createElement("li");
+        li.textContent = "🏆 " + name;
+        list.appendChild(li);
     }
+    
+    showNotification(name);
 }
 
 function checkAchievements() {
